@@ -1,6 +1,9 @@
 import requests
+import os
+from dotenv import load_dotenv
 from flask import Flask, jsonify, request, render_template
 
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -23,7 +26,7 @@ def analyze_weather():
         response = requests.post('http://localhost:5001/analyze', json=payload)
         results = response.json()
 
-    return render_template('index.html', results=results)
+    return render_template('index.html', results=results, API_KEY = os.getenv("API_KEY"))
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
