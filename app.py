@@ -7,8 +7,14 @@ load_dotenv()
 
 app = Flask(__name__)
 
+
 @app.route('/', methods=['GET','POST'])
 def analyze_weather():
+    """This method POSTS to backend analyzer app with payload data and receives analyzed results
+
+    Returns:
+        : an index.html page that is rendered with results if POST is performed otherwise results = None
+    """             
     results = None
     if request.method == 'POST':
         high = request.form.get('high')
@@ -16,6 +22,7 @@ def analyze_weather():
         startTime = request.form.get('start_datetime')
         endTime = request.form.get('end_datetime')
 
+        #info from form to POST to backend analyzer
         payload = {
             "high": high,
             "low": low,

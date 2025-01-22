@@ -13,7 +13,7 @@ function initMap() {
           new google.maps.Marker({
             position: { lat: pt.lat, lng: pt.lon },
             map: map,
-            title: `Temp: ${pt.temp}`,
+            title: `Temp: ${pt.average_temp}`,
             icon: iconUrl
           });
         });
