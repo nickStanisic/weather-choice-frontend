@@ -16,6 +16,8 @@ def analyze_weather():
         : an index.html page that is rendered with results if POST is performed otherwise results = None
     """             
     results = None
+    error_message = None
+    
     if request.method == 'POST':
         high = request.form.get('high')
         low = request.form.get('low')
@@ -29,11 +31,17 @@ def analyze_weather():
             "startTime": startTime,
             "endTime": endTime
         }
-        
-        response = requests.post('http://localhost:5001/analyze', json=payload)
-        results = response.json()
+        try: 
+            response = requests.post('http://localhost:5001/analyze', json=payload)
 
-    return render_template('index.html', results=results, API_KEY = os.getenv("API_KEY"))
+            #raise error if status is in 400-500's
+            response.raise_for_status()  
+            results = response.json()
+
+        except requests.exceptions.RequestException as e:
+            error_message = "Backend is currently unavailable. Please try again later."
+
+    return render_template('index.html', results=results, error_message=error_message, API_KEY = os.getenv("API_KEY"))
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
