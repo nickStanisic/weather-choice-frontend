@@ -1,21 +1,39 @@
+function createSquare(map, centerLat, centerLng, delta, color) {
+  // delta is the side length of the square in degrees
+  // e.g., 0.02 ≈ 2 km x 2 km near the equator (less near higher latitudes)
+  const halfDelta = delta / 2;
+  const bounds = {
+    north: centerLat + halfDelta,
+    south: centerLat - halfDelta,
+    east: centerLng + halfDelta,
+    west: centerLng - halfDelta
+  };
+
+  return new google.maps.Rectangle({
+    strokeColor: color,
+    strokeOpacity: 0.5,
+    strokeWeight: 2,
+    fillColor: color,
+    fillOpacity: 0.15, // semi-opaque
+    map: map,
+    bounds: bounds
+  });
+}
+
 function initMap() {
     const map = new google.maps.Map(document.getElementById("map"), {
       center: { lat: 39.0, lng: -105.5 },
-      zoom: 7,
+      zoom: 7
     });
 
     if (window.pointsData && window.pointsData.length) {
         window.pointsData.forEach(pt => {
-          const iconUrl = pt.valid
-            ? "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
-            : "http://maps.google.com/mapfiles/ms/icons/red-dot.png";
-    
-          new google.maps.Marker({
-            position: { lat: pt.lat, lng: pt.lon },
-            map: map,
-            title: `Temp: ${pt.average_temp}`,
-            icon: iconUrl
-          });
+          const color = pt.valid
+            ? 'green'
+            : 'red';
+
+          createSquare(map, pt.lat, pt.lon, 0.25, color);
+
         });
       }
   }
