@@ -55,7 +55,7 @@
     {% if results.error %}
       <p style="color:red;">Error: {{ results.error }}</p>
     {% else %}
-      <pre>{{ results|tojson(indent=2) }}</pre>
+      <h3>Results In</h3>
     {% endif %}
   {% else %}
     <p>No results yet. Submit the form above.</p>
