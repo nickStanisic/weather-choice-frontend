@@ -11,10 +11,10 @@ function createSquare(map, centerLat, centerLng, delta, color) {
 
   return new google.maps.Rectangle({
     strokeColor: color,
-    strokeOpacity: 0.5,
+    strokeOpacity: 0.25,
     strokeWeight: 2,
     fillColor: color,
-    fillOpacity: 0.15, // semi-opaque
+    fillOpacity: 0.25, 
     map: map,
     bounds: bounds
   });
@@ -32,7 +32,7 @@ function initMap() {
             ? 'green'
             : 'red';
 
-          createSquare(map, pt.lat, pt.lon, 0.25, color);
+          createSquare(map, pt.lat, pt.lon, 0.125, color);
 
         });
       }

@@ -5,60 +5,78 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="initial-scale=1.0"/>
   <title>Always Load Google Map</title>
-  <style>
-    #map {
-      width: 100%;
-      height: 500px;
-      margin-top: 20px;
-    }
-  </style>
+
+  <link 
+  rel="stylesheet" 
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" 
+  integrity="sha512-3H0yI1f/C8+PeTrH47IB8JylTj5EKMs14wOvDRv4s3VN6nCzs0cxh0z3FH6NYR5YCi7h7Fn4+m2KOVr4R7Tcew==" 
+  crossorigin="anonymous" 
+  referrerpolicy="no-referrer" 
+/>
+  <link rel="stylesheet" href="/static/css/index.css" />
 </head>
 <body>
-  <h1>Enter Weather Parameters</h1>
-  {% if error_message %}
-    <p style="color: red;">{{ error_message }}</p>
-  {% endif %} 
-  <form action="/" method="POST">
-    <label for="low">Low Temp:</label>
-    <input type="number" step="0.1" name="low" id="low" required>
+  <div class="center-container">
+    <h1>Weather Choice</h1>
+    {% if error_message %}
+      <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+    
+    <form action="/" method="POST">
+      <div class="form-row">
+        <label for="low">
+          <i class="fa-solid fa-temperature-low"></i>
+          Low Temp:
+        </label>
+        <input type="number" step="0.1" name="low" id="low" required>
 
-    <label for="high">High Temp:</label>
-    <input type="number" step="0.1" name="high" id="high" required>
+        <label for="high">
+          <i class="fa-solid fa-temperature-high"></i>
+          High Temp:
+        </label>
+        <input type="number" step="0.1" name="high" id="high" required>
+      </div>
 
-    <label for="start_datetime">Start Date and Time:</label>
-    <input type="datetime-local" name="start_datetime" id="start_datetime" required />
+      <div class="form-row">
+        <label for="start_datetime">
+          <i class="fas fa-calendar-day" style="margin-right: 5px;"></i>
+          Start Time:
+        </label>
+        <input type="datetime-local" name="start_datetime" id="start_datetime" required />
 
-    <label for="end_datetime">End Date and Time:</label>
-    <input type="datetime-local" name="end_datetime" id="end_datetime" required />
+        <label for="end_datetime">
+          <i class="fas fa-calendar-check" style="margin-right: 5px;"></i>
+          End Time:
+        </label>
+        <input type="datetime-local" name="end_datetime" id="end_datetime" required />
+      </div>
 
-    <button type="submit">Analyze</button>
-  </form>
-  <script src="/static/js/dateScript.js"></script>
-  <div id="map"></div>
+      <button type="submit">
+        <i class="fas fa-search" style="margin-right: 5px;"></i>
+        Analyze
+      </button>
+    </form>
+  
 
-  <script>
+    <script src="/static/js/dateScript.js"></script>
+
     {% if results %}
-      window.pointsData = {{ results|tojson|safe }};
-    {% else %}
-      window.pointsData = [];
-    {% endif %}
-  </script>
+      <div id="map"></div>
 
-  <script src="/static/js/maps.js"></script>
+      <script>
+        window.pointsData = {{ results|tojson|safe }};
+      </script>
+      <script src="/static/js/maps.js"></script>
+      <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key={{API_KEY}}&callback=initMap">
+      </script>
 
-  <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key={{API_KEY}}&callback=initMap">
-  </script>
-  <hr>
-  <h2>Results</h2>
-  {% if results %}
-    {% if results.error %}
-      <p style="color:red;">Error: {{ results.error }}</p>
-    {% else %}
-      <h3>Results In</h3>
+      <hr>
+      {% if results.error %}
+        <h2>Results</h2>
+        <p style="color:red;">Error: {{ results.error }}</p>
+      {% endif %}
     {% endif %}
-  {% else %}
-    <p>No results yet. Submit the form above.</p>
-  {% endif %}
+  </div>
 </body>
 </html>
