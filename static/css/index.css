@@ -31,6 +31,9 @@ body {
     text-align: center;
   }
   
+  .weather-title {
+    color: #b08f26
+  }
 
   .form-row {
     display: flex;

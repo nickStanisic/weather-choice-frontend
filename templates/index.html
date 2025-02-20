@@ -5,19 +5,19 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="initial-scale=1.0"/>
   <title>Always Load Google Map</title>
-
-  <link 
-  rel="stylesheet" 
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" 
-  integrity="sha512-3H0yI1f/C8+PeTrH47IB8JylTj5EKMs14wOvDRv4s3VN6nCzs0cxh0z3FH6NYR5YCi7h7Fn4+m2KOVr4R7Tcew==" 
-  crossorigin="anonymous" 
-  referrerpolicy="no-referrer" 
-/>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    integrity="sha512-3H0yI1f/C8+PeTrH47IB8JylTj5EKMs14wOvDRv4s3VN6nCzs0cxh0z3FH6NYR5YCi7h7Fn4+m2KOVr4R7Tcew=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
   <link rel="stylesheet" href="/static/css/index.css" />
 </head>
+<script src="https://kit.fontawesome.com/8a77fa2ebf.js" crossorigin="anonymous"></script>
 <body>
   <div class="center-container">
-    <h1>Weather Choice</h1>
+    <h1 class="weather-title">Weather Choice<i class="fa-solid fa-cloud-sun"></i></h1>
     {% if error_message %}
       <p style="color: red;">{{ error_message }}</p>
     {% endif %}
@@ -61,6 +61,12 @@
     <script src="/static/js/dateScript.js"></script>
 
     {% if results %}
+    <h3>
+      You chose Low Temp: {{ payload.low }},
+      High Temp: {{ payload.high }},
+      Start: {{ payload.startTime }},
+      End: {{ payload.endTime }}
+    </h3>
       <div id="map"></div>
 
       <script>
