@@ -7,7 +7,6 @@ load_dotenv()
 
 app = Flask(__name__)
 
-
 @app.route('/', methods=['GET','POST'])
 def analyze_weather():
     """This method POSTS to backend analyzer app with payload data and receives analyzed results
@@ -25,24 +24,34 @@ def analyze_weather():
         startTime = request.form.get('start_datetime')
         endTime = request.form.get('end_datetime')
 
-        #info from form to POST to backend analyzer
+        # Info from form to POST to backend analyzer
         payload = {
             "high": high,
             "low": low,
             "startTime": startTime,
             "endTime": endTime
         }
+        
         try: 
-            response = requests.post('http://localhost:5001/analyze', json=payload)
+            # Use environment variable for analyzer URL
+            analyzer_url = os.getenv('ANALYZER_URL', 'http://localhost:5001')
+            response = requests.post(f'{analyzer_url}/analyze', json=payload)
 
-            #raise error if status is in 400-500's
+            # Raise error if status is in 400-500's
             response.raise_for_status()  
             results = response.json()
 
         except requests.exceptions.RequestException as e:
             error_message = "Backend is currently unavailable. Please try again later."
+            print(f"Error connecting to analyzer: {e}")
 
-    return render_template('index.html', payload=payload, results=results, error_message=error_message, API_KEY = os.getenv("API_KEY"))
+    return render_template('index.html', 
+                         payload=payload, 
+                         results=results, 
+                         error_message=error_message, 
+                         API_KEY=os.getenv("API_KEY"))
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # Use PORT environment variable for Cloud Run, default to 8080
+    port = int(os.environ.get('PORT', 8080))
+    app.run(host='0.0.0.0', port=port, debug=False)
