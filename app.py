@@ -45,11 +45,27 @@ def analyze_weather():
             error_message = "Backend is currently unavailable. Please try again later."
             print(f"Error connecting to analyzer: {e}")
 
+    # Remove API_KEY from template rendering
     return render_template('index.html', 
                          payload=payload, 
                          results=results, 
-                         error_message=error_message, 
-                         API_KEY=os.getenv("API_KEY"))
+                         error_message=error_message)
+
+@app.route('/maps-config')
+def maps_config():
+    """Proxy endpoint to provide Google Maps configuration without exposing API key"""
+    try:
+        api_key = os.getenv("API_KEY")
+        if not api_key:
+            return jsonify({"error": "Maps configuration unavailable"}), 500
+            
+        # Return the Google Maps script URL with API key
+        maps_url = f"https://maps.googleapis.com/maps/api/js?key={api_key}&callback=initMap"
+        return jsonify({"maps_url": maps_url})
+    
+    except Exception as e:
+        print(f"Error getting maps config: {e}")
+        return jsonify({"error": "Maps configuration unavailable"}), 500
 
 if __name__ == "__main__":
     # Use PORT environment variable for Cloud Run, default to 8080

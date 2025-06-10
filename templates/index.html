@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -57,7 +56,6 @@
       </button>
     </form>
   
-
     <script src="/static/js/dateScript.js"></script>
 
     {% if results %}
@@ -71,11 +69,30 @@
 
       <script>
         window.pointsData = {{ results|tojson|safe }};
+        
+        // Load Google Maps securely through backend proxy
+        fetch('/maps-config')
+          .then(response => response.json())
+          .then(data => {
+            if (data.maps_url) {
+              const script = document.createElement('script');
+              script.src = data.maps_url;
+              script.async = true;
+              script.defer = true;
+              document.head.appendChild(script);
+            } else {
+              console.error('Unable to load maps configuration');
+              document.getElementById('map').innerHTML = 
+                '<p style="color: red;">Map unavailable - please try again later</p>';
+            }
+          })
+          .catch(error => {
+            console.error('Error loading maps:', error);
+            document.getElementById('map').innerHTML = 
+              '<p style="color: red;">Map unavailable - please try again later</p>';
+          });
       </script>
       <script src="/static/js/maps.js"></script>
-      <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key={{API_KEY}}&callback=initMap">
-      </script>
 
       <hr>
       {% if results.error %}
